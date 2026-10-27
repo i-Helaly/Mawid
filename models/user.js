@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         trim: true,
         minLength: 8,
-        select: false,
+        // select: false,
         required: true
     },
     role:{
@@ -32,6 +32,9 @@ const userSchema = new mongoose.Schema({
         default: false,
 
     },
+    token:{
+        type: String,
+    }
 
 
 } , {timestamps: true})
