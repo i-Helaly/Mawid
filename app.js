@@ -1,13 +1,14 @@
 require("dotenv").config();
 const express = require("express");
-const userRoutes = require("./routes/user.route");
+// const userRoutes = require("./routes/user.route");
 const authRoutes = require("./routes/authRoutes")
+const doctorRoutes = require("./routes/doctor.route")
 const resResponse = require("./utils/jsend");
 const app = express();
 
 
 app.use(express.json());
-app.use("/" , userRoutes);
+app.use("/" , doctorRoutes);
 app.use("/" , authRoutes);
 
 app.all("/*splat" , (req , res , next)=>{
