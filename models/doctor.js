@@ -20,7 +20,7 @@ const doctorSchema = new mongoose.Schema(
     password: {
       type: String,
       minlength: 8,
-      required: true,
+      required: false,
       select: false,
     },
 
@@ -63,6 +63,22 @@ const doctorSchema = new mongoose.Schema(
         },
       },
     ],
+    invitationStatus:{
+      type: String,
+      enum: ["pending , active"],
+      default: "pending"
+    },
+    invitationTokenHash: {
+    type: String,
+    default: undefined,
+    select: false
+},
+
+invitationExpiresAt: {
+    type: Date,
+    default: undefined,
+    select: false
+}
   },
   { timestamps: true }
 );
