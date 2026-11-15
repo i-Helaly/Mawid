@@ -1,3 +1,4 @@
+
 const Doctor = require("../models/doctor");
 const resResponse = require("../utils/jsend");
 const bcrypt = require("bcrypt");
@@ -14,31 +15,30 @@ const createDoctors = async (req, res) => {
             workWeek
         } = req.body;
 
-        const hashedPassword = await bcrypt.hash(password , 10);
-       
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const doctor = await Doctor.create({
             name,
             email,
-            password : hashedPassword,
+            password: hashedPassword,
             specialty,
             slotDuration,
-            workWeek,
+            workWeek
         });
 
-        // Send invitation email
         await sendEmail({
             to: doctor.email,
             subject: "Welcome to Mawid",
             text: `Hello ${doctor.name},
 
-             Welcome to Mawid!
+Welcome to Mawid!
 
-               Your doctor account has been successfully created.
+Your doctor account has been successfully created.
 
-            You can now log in using your registered email and password.
+You can now log in using your registered email and password.
 
-         Best regards,
-          Mawid Team`
+Best regards,
+Mawid Team`
         });
 
         return res.status(201).json({
@@ -49,7 +49,7 @@ const createDoctors = async (req, res) => {
                     id: doctor._id,
                     name: doctor.name,
                     email: doctor.email,
-                    specialty: doctor.specialty,
+                    specialty: doctor.specialty
                 }
             }
         });
@@ -78,85 +78,102 @@ const createDoctors = async (req, res) => {
 const getAllDoctors = async (req, res) => {
     try {
         const doctors = await Doctor.find();
-        res.status(200).json({ status: resResponse.SUCCESS, data: { doctors } })
+
+        return res.status(200).json({
+            status: resResponse.SUCCESS,
+            data: { doctors }
+        });
     } catch (err) {
         console.log(err);
 
         return res.status(500).json({
             status: resResponse.ERROR,
-            data: {
-                msg: "Internal server error"
-            }
+            data: { msg: "Internal server error" }
         });
     }
-}
+};
 
 const getADoctor = async (req, res) => {
     try {
         const docId = req.params.id;
         const doctor = await Doctor.findById(docId);
+
         if (!doctor) {
-            return res.status(404).json({ status: resResponse.FAIL, data: { msg: "Doctor not found" } })
+            return res.status(404).json({
+                status: resResponse.FAIL,
+                data: { msg: "Doctor not found" }
+            });
         }
-        res.status(200).json({ status: resResponse.SUCCESS, data: { doctor } })
+
+        return res.status(200).json({
+            status: resResponse.SUCCESS,
+            data: { doctor }
+        });
     } catch (err) {
         console.log(err);
+
         return res.status(500).json({
             status: resResponse.ERROR,
-            data: {
-                msg: "Internal server error"
-            }
+            data: { msg: "Internal server error" }
         });
     }
-}
+};
 
 const updateADoctor = async (req, res) => {
     try {
         const docId = req.params.id;
+
         const doctor = await Doctor.findByIdAndUpdate(docId, req.body, {
             new: true,
             runValidators: true
         });
+
         if (!doctor) {
             return res.status(404).json({
                 status: resResponse.FAIL,
                 data: { msg: "Doctor not found" }
             });
         }
-        res.status(200).json({ status: resResponse.SUCCESS, data: { doctor } })
+
+        return res.status(200).json({
+            status: resResponse.SUCCESS,
+            data: { doctor }
+        });
     } catch (err) {
         console.log(err);
 
         return res.status(500).json({
             status: resResponse.ERROR,
-            data: {
-                msg: "Internal server error"
-            }
+            data: { msg: "Internal server error" }
         });
     }
-}
+};
+
 const deleteADoctor = async (req, res) => {
     try {
         const docId = req.params.id;
         const doctor = await Doctor.findByIdAndDelete(docId);
+
         if (!doctor) {
             return res.status(404).json({
                 status: resResponse.FAIL,
                 data: { msg: "Doctor not found" }
             });
         }
-        res.status(200).json({ status: resResponse.SUCCESS, data: { doctor } })
+
+        return res.status(200).json({
+            status: resResponse.SUCCESS,
+            data: { doctor }
+        });
     } catch (err) {
         console.log(err);
 
         return res.status(500).json({
             status: resResponse.ERROR,
-            data: {
-                msg: "Internal server error"
-            }
+            data: { msg: "Internal server error" }
         });
     }
-}
+};
 
 module.exports = {
     createDoctors,
@@ -164,4 +181,4 @@ module.exports = {
     getADoctor,
     updateADoctor,
     deleteADoctor
-}
+};
