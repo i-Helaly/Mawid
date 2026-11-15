@@ -1,7 +1,8 @@
 const User = require("../models/user")
 const bcrypt = require("bcrypt");
 const jsend = require("../utils/jsend");
-const gernerateJwt = require("../utils/generate.jwt")
+const gernerateJwt = require("../utils/generate.jwt");
+const Doctor = require("../models/doctor");
 
 const register = async (req, res) => {
     try {
@@ -39,16 +40,31 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ status: jsend.FAIL, data: { msg: "user not found" } })
+
+        let account = await User.findOne({ email }).select("+password");
+        let accountType;
+
+        if (account) {
+            accountType = account.role;
+        } else {
+            account = await Doctor.findOne({ email }).select("+password");;
+            accountType = "doctor"
         }
-        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!account) {
+            return res.status(400).json({
+                status: jsend.FAIL,
+                data: { msg: "Invalid email" }
+            });
+        }
+
+        const isMatch = await bcrypt.compare(password, account.password);
+
         if (!isMatch) {
             return res.status(400).json({ status: jsend.FAIL, data: { msg: "password dont matching" } })
         }
 
-        const token = gernerateJwt({ userId: user._id, role: user.role, email: user.email });
+        const token = gernerateJwt({ userId: account._id, role: accountType, email: account.email });
 
         res.status(200).json({ status: jsend.SUCCESS, data: { token } })
     } catch (err) {
