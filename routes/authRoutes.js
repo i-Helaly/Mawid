@@ -7,8 +7,8 @@ const resOfValidation = require("../middlewares/validationResult");
 const loginValidator = require("../middlewares/loginvalidator");
 
 
-router.post("/api/register" ,validator,resOfValidation ,authController.register );
-router.post("/api/login" ,loginValidator,resOfValidation,authController.login );
+router.post("/register" ,validator,resOfValidation ,authController.register );
+router.post("/login" ,loginValidator,resOfValidation,authController.login );
 
 
 

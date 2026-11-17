@@ -152,7 +152,9 @@ const updateADoctor = async (req, res) => {
 const deleteADoctor = async (req, res) => {
     try {
         const docId = req.params.id;
-        const doctor = await Doctor.findByIdAndDelete(docId);
+        console.log(docId);
+        const doctor = await Doctor.findByIdAndDelete( docId);
+        console.log(doctor)
 
         if (!doctor) {
             return res.status(404).json({

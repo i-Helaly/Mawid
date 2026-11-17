@@ -2,6 +2,7 @@
 const Appointment = require("../models/Appointment");
 const httpRes = require("../utils/jsend");
 const createAppointmentService = require("../services/appointment.service");
+const User = require("../models/user")
 
 const bookAppointment =async (req , res)=>{
     const {doctor  , start ,end } = req.body;
